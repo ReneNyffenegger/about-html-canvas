@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <title>TextMetrics</title>
+
+<style>
+@font-face {
+  font-family: 'Scriptina';
+  src: url('fonts/Scriptina/Scriptina.eot?#iefix'   ) format('embedded-opentype'),
+       url('fonts/Scriptina/Scriptina.woff'         ) format('woff'             ),
+       url('fonts/Scriptina/Scriptina.ttf'          ) format('truetype'         ),
+       url('fonts/Scriptina/Scriptina.svg#Scriptina') format('svg');
+  font-weight: normal;
+  font-style : normal;
+}
+</style>
+
+<script type="text/javascript">
+
+  var x=90;
+  var ctx;
+
+  function drawVerticalLine(x, color) {
+      ctx.beginPath();
+      ctx.lineWidth = '1';
+      ctx.strokeStyle = color;
+      ctx.moveTo(x, 200);
+      ctx.lineTo(x, 400);
+      ctx.stroke();
+
+  }
+
+  function drawLetter(letter, color, drawLines) { try {
+
+
+    let tm=ctx.measureText(letter);
+ // alert(tm); // object TextMetrics
+
+    ctx.fillStyle=color
+
+    ctx.fillText(letter, x, 350);
+
+    if (drawLines) {
+
+      drawVerticalLine(x, '#ff0000');
+      drawVerticalLine(x + tm.width, '#0000ff');
+//    alert(tm.actualBoundingBoxLeft);
+//    alert(tm.ideographicBaseline);
+//    drawVerticalLine(x + tm.actualBoundingBoxLeft+50, '#7700ff');
+//    drawVerticalLine(x + tm.actualBoundingBoxLeft+50, '#7700ff');
+
+
+    }
+
+
+
+
+    x += tm.width; // width is how much we have to advance the x coordinate
+
+  } catch(e) {alert (e)} } 
+
+
+  function init() { try {
+
+    let canvas = document.getElementById('canvas');
+
+    ctx = canvas.getContext('2d');
+
+    ctx.font='120px Scriptina';
+
+    drawLetter('H', '#d2444b', 0);
+    drawLetter('e', '#7051f4', 0);
+    drawLetter('l', '#5be345', 0);
+    drawLetter('l', '#734338', 1);
+    drawLetter('o', '#eb34df', 0);
+    drawLetter(' ', '#eb34df', 0);
+    drawLetter('W', '#d0a364', 0);
+    drawLetter('o', '#116211', 0);
+    drawLetter('r', '#8e17ad', 0);
+    drawLetter('l', '#cae553', 0);
+    drawLetter('d', '#2efde5', 0);
+
+       
+
+  } catch(e) {alert (e)} } 
+
+</script>
+
+</head>
+<body onload='init()'>
+
+      <canvas id    ='canvas' 
+                      width='900' height='600'
+              style ='width:900px;height:600px;border:solid 1px black;margin-left:-450px;margin-top:-300px;left:50%;position:fixed;top:50%' ></canvas>
+
+</body>
+</html>
