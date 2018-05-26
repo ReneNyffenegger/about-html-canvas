@@ -1,0 +1,33 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Canvas: simple first example</title>
+<script>
+window.onload = function () {
+   var canvas = document.getElementById('ctx');
+
+   if (canvas.getContext){
+      var ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = "rgb(200,100,20)";
+      ctx.fillRect (10, 10, 280, 280);
+   }
+
+}
+</script>
+
+<style>
+#ctx {
+   border:1px solid #000000;
+}
+</style>
+
+</head>
+
+<body>
+<canvas id="ctx" width="300" height="300">
+   Your browser doesn't support canvas!
+</canvas>
+</body>
+</html>
