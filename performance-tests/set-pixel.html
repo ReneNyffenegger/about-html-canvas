@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Canvas performance test: setting pixels</title>
+
+<script type="text/javascript">
+
+  var ctx;
+  var out;
+
+  var rx =  50; var ry = 400;
+  var gx = 120; var gy = 300;
+  var bx = 210; var by = 500;
+
+  var w;
+  var h;
+
+  var cnt = 0;
+
+  var img1x1;
+  var img1x1_data;
+
+  var imgCtx;
+  var imgCtx_data;
+
+  var stopped = false;
+
+//var idAnimationFrame;
+
+  function paint() {
+
+    var t0 = performance.now();
+
+    var w4 = 4*w;
+
+//  alert( document.querySelector('input[name=doWhat]:checked').value);
+    var doFillRect        = document.querySelector('input[name=doWhat]:checked').value == 'fillRect'        ? true : false;
+    var doPutImageData1x1 = document.querySelector('input[name=doWhat]:checked').value == 'putImageData1x1' ? true : false;
+    var doPutImageDataCtx = document.querySelector('input[name=doWhat]:checked').value == 'putImageDataCtx' ? true : false;
+
+    for (var x=0; x<w; x++) { for (var y=0; y<h; y++) {
+
+      var rd = Math.sqrt(Math.pow(rx-x, 2) + Math.pow(ry-y, 2)) << 0;
+      var gd = Math.sqrt(Math.pow(gx-x, 2) + Math.pow(gy-y, 2)) << 0;
+      var bd = Math.sqrt(Math.pow(bx-x, 2) + Math.pow(by-y, 2)) << 0;
+
+      var r = Math.abs( rd % 511 - 256);
+      var g = Math.abs( gd % 511 - 256);
+      var b = Math.abs( bd % 511 - 256);
+      var a =   255      ; // / 255;
+
+      if (doFillRect) {
+        ctx.fillStyle = "rgba("+r+","+g+","+b+","+a+")";
+        ctx.fillRect(x, y, 1, 1);
+      }
+      else if (doPutImageData1x1) {
+          img1x1_data[0] = r;
+          img1x1_data[1] = g;
+          img1x1_data[2] = b;
+          img1x1_data[3] = a;
+          ctx.putImageData(img1x1, x, y); 
+      }
+      else if (doPutImageDataCtx) {
+
+          var base = y*w4 + 4*x;
+
+          imgCtx_data[base + 0] = r;
+          imgCtx_data[base + 1] = g;
+          imgCtx_data[base + 2] = b;
+          imgCtx_data[base + 3] = a;
+
+      }
+
+
+    }}
+
+    if (doPutImageDataCtx) {
+       ctx.putImageData(imgCtx, 0, 0); 
+    }
+
+    rx = rx + 8; ry = ry-5;
+    gx = gx - 2; gy = gy+3;
+    bx = bx + 3; by = by+2;
+
+    var t1 = performance.now();
+    cnt ++;
+    out.innerHTML = (t1 - t0) + ' ms (' + cnt + ')';
+    
+    setTimeout(sleep, 30);
+//  requestAnimationFrame(paint);
+
+  }
+
+  function sleep() {
+//  idAnimationFrame = requestAnimationFrame(paint);
+    if (! stopped) {
+      requestAnimationFrame(paint);
+    }
+  }
+
+  function stopStartAnimation() {
+    var stopStartButton = document.getElementById('stopStart');
+
+    if (stopStartButton.value == "Stop animation") {
+       stopped = true;
+//     cancelAnimationFrame(idAnimationFrame);
+       stopStartButton.value = "Start animation";
+    }
+    else {
+       stopped = false;
+       stopStartButton.value = "Stop animation";
+       requestAnimationFrame(paint);
+    }
+  }
+
+  function main() {
+    var canvas = document.getElementById('canvas');
+        out    = document.getElementById('out'   );
+    w = canvas.width;
+    h = canvas.height;
+    ctx = canvas.getContext('2d');
+    ctx.fillFtyle="rgb(0,0,0)";
+    ctx.fillRect(0, 0, w, h);
+
+    img1x1      = ctx.createImageData(1, 1); // Create a 1x1 image
+    img1x1_data = img1x1.data;
+
+    imgCtx      = ctx.createImageData(w, h);
+    imgCtx_data = imgCtx.data;
+
+    setTimeout(paint, 500);
+  }
+
+</script>
+
+</head>
+
+<body onload="main()">
+
+  <canvas id="canvas" width="310" height="580">
+  </canvas>
+  <div id="out"></div>
+    Do: <input type="radio" name="doWhat" value="nothing" checked>Nothing</input>
+        <input type="radio" name="doWhat" value="fillRect"          >fillRect</input>
+        <input type="radio" name="doWhat" value="putImageData1x1"   >putImageData 1x1</input>
+        <input type="radio" name="doWhat" value="putImageDataCtx"   >putImageData ctx</input>
+
+    <br>
+        <input type="button" onclick="stopStartAnimation()" value="Stop animation" id='stopStart'>
+
+</body>
+</html>
