@@ -2,7 +2,7 @@
 <html>
 <head><title>fillText</title>
 
-<style type='text/css'> 
+<style type='text/css'>
 @font-face {
   font-family: Scriptina;
   src: url(fonts/Scriptina/Scriptina.eot?#iefix   ) format('embedded-opentype'),
@@ -21,21 +21,23 @@
 
        let ctx = canvas.getContext('2d');
 
+   //  Choose the font:
        ctx.font='50px Scriptina';
        ctx.fillStyle='#fe7622';
-       ctx.fillText("Hello world", 300, 300);
-       
 
-    } catch(e) {alert (e)} } 
+    // Write the text using the font
+       ctx.fillText("Hello world", 80, 110);
+
+    } catch(e) {alert (e)} }
 
 </script>
     </head>
 
 <body onload='init();'>
-   
-      <canvas id    ='canvas' 
-                      width='900' height='600'
-              style ='width:900px;height:600px;border:solid 1px black;margin-left:-450px;margin-top:-300px;left:50%;position:fixed;top:50%' ></canvas>
+
+      <canvas id    ='canvas'
+                      width='400' height='180'
+              style ='width:400px;height:180;border:solid 1px black;margin-left:-200px;margin-top:-90px;left:50%;position:fixed;top:50%' ></canvas>
 
 </body>
 </html>
